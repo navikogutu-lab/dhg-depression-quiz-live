@@ -78,7 +78,6 @@
     .site-header .logo img {
       height: 44px;
       width: auto;
-      filter: brightness(0) invert(1);
     }
     .header-badge {
       background: var(--clr-accent);
@@ -427,11 +426,11 @@
       letter-spacing: .04em;
       margin-top: 10px;
     }
-    .sev-minimal   { background: rgba(46,204,113,.2); color: #1a7a4a; }
-    .sev-mild      { background: rgba(52,152,219,.2); color: #1a5276; }
-    .sev-moderate  { background: rgba(243,156,18,.2); color: #784212; }
-    .sev-modsevere { background: rgba(231,76,60,.2);  color: #7b241c; }
-    .sev-severe    { background: rgba(192,57,43,.2);  color: #6e2b1e; }
+    .sev-minimal   { background: #27ae60; color: #ffffff; }
+    .sev-mild      { background: #2980b9; color: #ffffff; }
+    .sev-moderate  { background: #e67e22; color: #ffffff; }
+    .sev-modsevere { background: #e74c3c; color: #ffffff; }
+    .sev-severe    { background: #922b21; color: #ffffff; }
 
     .results-body { padding: 36px 40px; }
 
@@ -512,11 +511,11 @@
       transition: var(--transition);
     }
     .scale-item.active { opacity: 1; transform: scale(1.05); box-shadow: var(--shadow-md); }
-    .scale-minimal   { background: #d5f5e3; color: #1a7a4a; }
-    .scale-mild      { background: #d6eaf8; color: #1a5276; }
-    .scale-moderate  { background: #fdebd0; color: #784212; }
-    .scale-modsevere { background: #fadbd8; color: #7b241c; }
-    .scale-severe    { background: #f5b7b1; color: #6e2b1e; }
+    .scale-minimal   { background: #d5f5e3; color: #1b5e35; }
+    .scale-mild      { background: #d6eaf8; color: #154360; }
+    .scale-moderate  { background: #fdebd0; color: #7d3c00; }
+    .scale-modsevere { background: #fadbd8; color: #641e16; }
+    .scale-severe    { background: #922b21; color: #ffffff; }
 
     /* ── CTA Block ─────────────────────────────────────────────── */
     .cta-block {
@@ -600,19 +599,10 @@
       line-height: 1.6;
     }
     .site-footer a { color: var(--clr-accent); }
-    .crisis-bar {
-      background: var(--clr-danger);
-      color: var(--clr-white);
-      text-align: center;
-      padding: 10px 20px;
-      font-size: .83rem;
-      font-weight: 600;
-    }
-    .crisis-bar a { color: var(--clr-accent); font-weight: 800; }
 
     /* ── Print / PDF styles ────────────────────────────────────── */
     @media print {
-      .site-header, .site-footer, .crisis-bar,
+      .site-header, .site-footer,
       .results-actions, .cta-block { display: none !important; }
       .quiz-card { box-shadow: none; border: 1px solid #ccc; }
       body { background: white; }
@@ -646,10 +636,6 @@
     <span class="header-badge">Free Self-Assessment</span>
   </header>
 
-  <!-- ── Crisis Bar ───────────────────────────────────────────── -->
-  <aside class="crisis-bar" role="note" aria-label="Crisis resources">
-    If you are in crisis or need immediate help, call or text <a href="tel:988">988</a> (Suicide &amp; Crisis Lifeline) or <a href="tel:911">911</a>.
-  </aside>
 
   <!-- ── Main ─────────────────────────────────────────────────── -->
   <main class="quiz-main" id="main-content">
