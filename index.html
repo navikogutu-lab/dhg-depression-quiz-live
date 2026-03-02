@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Depression Self-Assessment | Discover Health Group</title>
+  <meta name="description" content="Take our free, clinically-based depression self-assessment (PHQ-9) to understand your mental health and get connected with care." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    /* ── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --clr-primary:       #3190aa;
+      --clr-primary-hover: #39a5c3;
+      --clr-primary-dark:  #1d5463;
+      --clr-accent:        #fad329;
+      --clr-accent-dark:   #e6bd05;
+      --clr-dark:          #263238;
+      --clr-bg:            #f5f6f7;
+      --clr-border:        #dddedf;
+      --clr-white:         #ffffff;
+      --clr-text:          #1a2a30;
+      --clr-text-muted:    #5a7280;
+      --clr-success:       #2ecc71;
+      --clr-warn:          #f39c12;
+      --clr-danger:        #e74c3c;
+
+      --radius-sm:  6px;
+      --radius-md:  12px;
+      --radius-lg:  20px;
+      --radius-xl:  28px;
+
+      --shadow-sm:  0 1px 4px rgba(0,0,0,.07);
+      --shadow-md:  0 4px 20px rgba(0,0,0,.10);
+      --shadow-lg:  0 8px 40px rgba(0,0,0,.13);
+
+      --font: 'Inter', -apple-system, system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+      --transition: .25s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font);
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--clr-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { cursor: pointer; font-family: var(--font); }
+
+    /* ── Layout Shell ──────────────────────────────────────────── */
+    .quiz-shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    .site-header {
+      background: var(--clr-dark);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .site-header .logo img {
+      height: 44px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+    .header-badge {
+      background: var(--clr-accent);
+      color: var(--clr-dark);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    /* ── Main Container ────────────────────────────────────────── */
+    .quiz-main {
+      padding: 40px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .quiz-card {
+      background: var(--clr-white);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 700px;
+      overflow: hidden;
+    }
+
+    /* ── Progress Bar ──────────────────────────────────────────── */
+    .progress-track {
+      background: var(--clr-border);
+      height: 5px;
+    }
+    .progress-fill {
+      height: 5px;
+      background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent));
+      border-radius: 0 3px 3px 0;
+      transition: width .5s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+
+    /* ── Screen Panels ─────────────────────────────────────────── */
+    .screen {
+      display: none;
+      animation: fadeUp .4s ease both;
+    }
+    .screen.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Welcome Screen ────────────────────────────────────────── */
+    .welcome-hero {
+      background: linear-gradient(135deg, var(--clr-primary-dark) 0%, var(--clr-primary) 60%, var(--clr-primary-hover) 100%);
+      padding: 52px 40px 44px;
+      text-align: center;
+      color: var(--clr-white);
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    }
+    .welcome-hero > * { position: relative; }
+    .welcome-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+      backdrop-filter: blur(4px);
+      border: 2px solid rgba(255,255,255,.25);
+    }
+    .welcome-hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .welcome-hero p {
+      font-size: 1rem;
+      opacity: .88;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .welcome-body { padding: 36px 40px 44px; }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .info-card {
+      background: var(--clr-bg);
+      border-radius: var(--radius-md);
+      padding: 18px 14px;
+      text-align: center;
+      border: 1px solid var(--clr-border);
+    }
+    .info-card .ic-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .info-card .ic-label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--clr-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .info-card .ic-value {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--clr-text);
+      margin-top: 2px;
+    }
+    .disclaimer-box {
+      background: #fffbea;
+      border: 1px solid #f5d97e;
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-size: .85rem;
+      color: #6b5500;
+      margin-bottom: 28px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .disclaimer-box .disc-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Buttons ───────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      border-radius: 50px;
+      border: none;
+      transition: var(--transition);
+      outline: none;
+      line-height: 1;
+    }
+    .btn:focus-visible { box-shadow: 0 0 0 3px rgba(49,144,170,.4); }
+    .btn-primary {
+      background: var(--clr-primary);
+      color: var(--clr-white);
+      padding: 16px 36px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: var(--clr-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(49,144,170,.35);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--clr-primary);
+      border: 2px solid var(--clr-primary);
+      padding: 13px 28px;
+      font-size: .9rem;
+    }
+    .btn-secondary:hover { background: var(--clr-primary); color: var(--clr-white); }
+    .btn-accent {
+      background: var(--clr-accent);
+      color: var(--clr-dark);
+      padding: 16px 36px;
+      font-size: 1rem;
+    }
+    .btn-accent:hover {
+      background: var(--clr-accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(250,211,41,.4);
+    }
+    .btn-sm { padding: 10px 22px; font-size: .85rem; }
+
+    /* ── Question Screen ───────────────────────────────────────── */
+    .q-header {
+      padding: 32px 40px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .q-counter {
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--clr-text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .q-category-tag {
+      background: rgba(49,144,170,.1);
+      color: var(--clr-primary-dark);
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 50px;
+      letter-spacing: .04em;
+    }
+    .q-body { padding: 20px 40px 40px; }
+    .q-subtext {
+      font-size: .82rem;
+      color: var(--clr-text-muted);
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    .q-text {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--clr-dark);
+      margin-bottom: 24px;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      list-style: none;
+    }
+    .option-btn {
+      width: 100%;
+      background: var(--clr-bg);
+      border: 2px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      text-align: left;
+      font-size: .95rem;
+      font-weight: 500;
+      color: var(--clr-text);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: var(--transition);
+    }
+    .option-btn:hover {
+      border-color: var(--clr-primary);
+      background: rgba(49,144,170,.06);
+      transform: translateX(3px);
+    }
+    .option-btn.selected {
+      border-color: var(--clr-primary);
+      background: rgba(49,144,170,.1);
+      color: var(--clr-primary-dark);
+    }
+    .option-btn.selected .opt-radio { background: var(--clr-primary); border-color: var(--clr-primary); }
+    .option-btn.selected .opt-radio::after { opacity: 1; }
+    .opt-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--clr-border);
+      flex-shrink: 0;
+      position: relative;
+      transition: var(--transition);
+    }
+    .opt-radio::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .opt-score {
+      margin-left: auto;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--clr-text-muted);
+      background: var(--clr-white);
+      border: 1px solid var(--clr-border);
+      border-radius: 50px;
+      padding: 2px 8px;
+      flex-shrink: 0;
+    }
+    .q-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .q-nav .btn-secondary { flex: 0 0 auto; }
+    .q-nav .btn-primary { flex: 1; }
+
+    /* ── Results Screen ────────────────────────────────────────── */
+    .results-hero {
+      padding: 44px 40px 36px;
+      text-align: center;
+      background: linear-gradient(160deg, var(--clr-dark) 0%, #37474f 100%);
+      color: var(--clr-white);
+    }
+    .results-hero h2 {
+      font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .results-hero p { font-size: .9rem; opacity: .8; }
+
+    .score-ring-wrap {
+      margin: 0 auto 24px;
+      width: 140px;
+      height: 140px;
+      position: relative;
+    }
+    .score-ring-wrap svg { width: 140px; height: 140px; transform: rotate(-90deg); }
+    .score-ring-bg { fill: none; stroke: rgba(255,255,255,.15); stroke-width: 10; }
+    .score-ring-fill {
+      fill: none;
+      stroke: var(--clr-accent);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 352;
+      stroke-dashoffset: 352;
+      transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    .score-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--clr-white);
+    }
+    .score-max { font-size: .75rem; opacity: .6; margin-top: 2px; }
+
+    .severity-badge {
+      display: inline-block;
+      padding: 8px 22px;
+      border-radius: 50px;
+      font-size: .9rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      margin-top: 10px;
+    }
+    .sev-minimal   { background: rgba(46,204,113,.2); color: #1a7a4a; }
+    .sev-mild      { background: rgba(52,152,219,.2); color: #1a5276; }
+    .sev-moderate  { background: rgba(243,156,18,.2); color: #784212; }
+    .sev-modsevere { background: rgba(231,76,60,.2);  color: #7b241c; }
+    .sev-severe    { background: rgba(192,57,43,.2);  color: #6e2b1e; }
+
+    .results-body { padding: 36px 40px; }
+
+    .result-section { margin-bottom: 32px; }
+    .result-section h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--clr-dark);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .result-section h3::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 18px;
+      background: var(--clr-primary);
+      border-radius: 2px;
+    }
+
+    .interp-box {
+      background: var(--clr-bg);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border-left: 4px solid var(--clr-primary);
+      font-size: .92rem;
+      line-height: 1.7;
+      color: var(--clr-text);
+    }
+
+    .score-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .breakdown-item {
+      display: grid;
+      grid-template-columns: 1fr auto 100px;
+      align-items: center;
+      gap: 12px;
+      font-size: .85rem;
+    }
+    .breakdown-label { color: var(--clr-text); font-weight: 500; }
+    .breakdown-score {
+      font-weight: 700;
+      color: var(--clr-primary-dark);
+      font-size: .9rem;
+      text-align: right;
+    }
+    .breakdown-bar {
+      height: 6px;
+      background: var(--clr-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .breakdown-fill {
+      height: 100%;
+      background: var(--clr-primary);
+      border-radius: 3px;
+      transition: width .8s ease;
+    }
+
+    .severity-scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .scale-item {
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      text-align: center;
+      font-size: .7rem;
+      font-weight: 600;
+      opacity: .5;
+      transition: var(--transition);
+    }
+    .scale-item.active { opacity: 1; transform: scale(1.05); box-shadow: var(--shadow-md); }
+    .scale-minimal   { background: #d5f5e3; color: #1a7a4a; }
+    .scale-mild      { background: #d6eaf8; color: #1a5276; }
+    .scale-moderate  { background: #fdebd0; color: #784212; }
+    .scale-modsevere { background: #fadbd8; color: #7b241c; }
+    .scale-severe    { background: #f5b7b1; color: #6e2b1e; }
+
+    /* ── CTA Block ─────────────────────────────────────────────── */
+    .cta-block {
+      background: linear-gradient(135deg, var(--clr-primary-dark), var(--clr-primary));
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      text-align: center;
+      margin: 0 40px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: rgba(255,255,255,.06);
+      border-radius: 50%;
+    }
+    .cta-block > * { position: relative; }
+    .cta-block .cta-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .cta-block h3 {
+      color: var(--clr-white);
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .cta-block p {
+      color: rgba(255,255,255,.82);
+      font-size: .9rem;
+      margin-bottom: 24px;
+      max-width: 400px;
+      margin-inline: auto;
+      margin-bottom: 24px;
+    }
+    .cta-phone-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--clr-accent);
+      color: var(--clr-dark);
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      letter-spacing: .02em;
+    }
+    .cta-phone-btn:hover {
+      background: var(--clr-accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(250,211,41,.4);
+      text-decoration: none;
+    }
+    .cta-sub {
+      color: rgba(255,255,255,.6);
+      font-size: .78rem;
+      margin-top: 14px !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* ── Action Buttons Row ────────────────────────────────────── */
+    .results-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 40px 40px;
+    }
+    .results-actions .btn { flex: 1; min-width: 140px; }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--clr-dark);
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: .8rem;
+      line-height: 1.6;
+    }
+    .site-footer a { color: var(--clr-accent); }
+    .crisis-bar {
+      background: var(--clr-danger);
+      color: var(--clr-white);
+      text-align: center;
+      padding: 10px 20px;
+      font-size: .83rem;
+      font-weight: 600;
+    }
+    .crisis-bar a { color: var(--clr-accent); font-weight: 800; }
+
+    /* ── Print / PDF styles ────────────────────────────────────── */
+    @media print {
+      .site-header, .site-footer, .crisis-bar,
+      .results-actions, .cta-block { display: none !important; }
+      .quiz-card { box-shadow: none; border: 1px solid #ccc; }
+      body { background: white; }
+    }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .welcome-hero { padding: 36px 24px 32px; }
+      .welcome-body, .q-header, .q-body, .results-body,
+      .results-actions, .cta-block { padding-inline: 24px; }
+      .cta-block { margin-inline: 24px; }
+      .results-hero { padding: 32px 24px 28px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .severity-scale { grid-template-columns: repeat(5,1fr); gap: 2px; }
+      .scale-item { font-size: .6rem; padding: 8px 2px; }
+      .breakdown-item { grid-template-columns: 1fr auto 70px; }
+      .q-nav { flex-direction: column-reverse; }
+      .q-nav .btn-secondary { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-shell">
+
+  <!-- ── Header ──────────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <a href="https://discoverhealthgroup.com/" class="logo" aria-label="Discover Health Group Home">
+      <img src="https://discoverhealthgroup.com/wp-content/uploads/DHG-Logo.svg" alt="Discover Health Group" />
+    </a>
+    <span class="header-badge">Free Self-Assessment</span>
+  </header>
+
+  <!-- ── Crisis Bar ───────────────────────────────────────────── -->
+  <aside class="crisis-bar" role="note" aria-label="Crisis resources">
+    If you are in crisis or need immediate help, call or text <a href="tel:988">988</a> (Suicide &amp; Crisis Lifeline) or <a href="tel:911">911</a>.
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────────────── -->
+  <main class="quiz-main" id="main-content">
+    <article class="quiz-card" aria-label="Depression self-assessment quiz">
+
+      <!-- Progress Bar -->
+      <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Quiz progress" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <!-- ── Screen 1: Welcome ─────────────────────────────────── -->
+      <section class="screen active" id="screen-welcome" aria-labelledby="welcome-title">
+        <div class="welcome-hero">
+          <div class="welcome-icon" aria-hidden="true">🧠</div>
+          <h1 id="welcome-title">Depression Self-Assessment</h1>
+          <p>A clinically validated screening tool (PHQ-9) to help you understand your mental health and take the next step toward feeling better.</p>
+        </div>
+        <div class="welcome-body">
+          <div class="info-grid" role="list">
+            <div class="info-card" role="listitem">
+              <div class="ic-icon" aria-hidden="true">⏱️</div>
+              <div class="ic-label">Time</div>
+              <div class="ic-value">~3 Minutes</div>
+            </div>
+            <div class="info-card" role="listitem">
+              <div class="ic-icon" aria-hidden="true">❓</div>
+              <div class="ic-label">Questions</div>
+              <div class="ic-value">9 Questions</div>
+            </div>
+            <div class="info-card" role="listitem">
+              <div class="ic-icon" aria-hidden="true">🔒</div>
+              <div class="ic-label">Privacy</div>
+              <div class="ic-value">Confidential</div>
+            </div>
+          </div>
+
+          <div class="disclaimer-box" role="note">
+            <span class="disc-icon" aria-hidden="true">⚠️</span>
+            <p>This assessment is for informational purposes only and is <strong>not a medical diagnosis</strong>. Results should be discussed with a qualified healthcare professional. If you are experiencing a mental health emergency, please call 988 or 911 immediately.</p>
+          </div>
+
+          <button class="btn btn-primary" onclick="startQuiz()" aria-label="Begin the depression self-assessment">
+            Begin Assessment <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ── Screen 2: Questions ───────────────────────────────── -->
+      <section class="screen" id="screen-quiz" aria-labelledby="question-heading" aria-live="polite">
+        <div class="q-header">
+          <span class="q-counter" id="qCounter" aria-live="polite">Question 1 of 9</span>
+          <span class="q-category-tag" id="qCategory" aria-hidden="true">Mood</span>
+        </div>
+        <div class="q-body">
+          <p class="q-subtext">Over the <strong>last 2 weeks</strong>, how often have you been bothered by:</p>
+          <h2 class="q-text" id="question-heading" tabindex="-1"></h2>
+          <ul class="options-list" id="optionsList" role="radiogroup" aria-labelledby="question-heading"></ul>
+          <div class="q-nav">
+            <button class="btn btn-secondary btn-sm" id="btnPrev" onclick="prevQuestion()" aria-label="Previous question" style="display:none">← Back</button>
+            <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()" aria-label="Next question" disabled>
+              Next <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Screen 3: Results ─────────────────────────────────── -->
+      <section class="screen" id="screen-results" aria-labelledby="results-title">
+        <div class="results-hero">
+          <div class="score-ring-wrap" role="img" aria-labelledby="score-label">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="score-ring-bg" cx="60" cy="60" r="56"/>
+              <circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="56"/>
+            </svg>
+            <div class="score-center">
+              <span class="score-number" id="scoreDisplay">0</span>
+              <span class="score-max">/ 27</span>
+            </div>
+          </div>
+          <h2 id="results-title">Your Assessment Results</h2>
+          <p id="score-label">PHQ-9 Score &amp; Depression Severity</p>
+          <span class="severity-badge" id="severityBadge"></span>
+        </div>
+
+        <div class="results-body">
+
+          <!-- Severity Scale Visual -->
+          <div class="result-section">
+            <h3>Where You Fall on the Scale</h3>
+            <div class="severity-scale" role="list" aria-label="Depression severity scale">
+              <div class="scale-item scale-minimal"  role="listitem" data-level="minimal">Minimal<br/><small>0–4</small></div>
+              <div class="scale-item scale-mild"     role="listitem" data-level="mild">Mild<br/><small>5–9</small></div>
+              <div class="scale-item scale-moderate" role="listitem" data-level="moderate">Moderate<br/><small>10–14</small></div>
+              <div class="scale-item scale-modsevere"role="listitem" data-level="modsevere">Mod. Severe<br/><small>15–19</small></div>
+              <div class="scale-item scale-severe"   role="listitem" data-level="severe">Severe<br/><small>20–27</small></div>
+            </div>
+          </div>
+
+          <!-- Interpretation -->
+          <div class="result-section">
+            <h3>What This Means</h3>
+            <div class="interp-box" id="interpretationText"></div>
+          </div>
+
+          <!-- Score Breakdown -->
+          <div class="result-section">
+            <h3>Answer Breakdown</h3>
+            <div class="score-breakdown" id="breakdownList" aria-label="Breakdown of answers by question"></div>
+          </div>
+
+        </div>
+
+        <!-- CTA Block -->
+        <section class="cta-block" aria-labelledby="cta-title">
+          <div class="cta-icon" aria-hidden="true">💙</div>
+          <h3 id="cta-title">Ready to Take the Next Step?</h3>
+          <p>Our compassionate team at Discover Health Group is here to help. Same-day admissions available — you don't have to wait to feel better.</p>
+          <a href="tel:6038211333" class="cta-phone-btn" aria-label="Call Discover Health Group at 603-821-1333">
+            <span aria-hidden="true">📞</span> 603-821-1333
+          </a>
+          <p class="cta-sub">Confidential · Free Consultation · Same-Day Admissions</p>
+        </section>
+
+        <!-- Action Buttons -->
+        <div class="results-actions">
+          <button class="btn btn-secondary" onclick="downloadPDF()" aria-label="Download your results as a PDF">
+            <span aria-hidden="true">⬇️</span> Download PDF
+          </button>
+          <button class="btn btn-secondary" onclick="printResults()" aria-label="Print your results">
+            <span aria-hidden="true">🖨️</span> Print Results
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="restartQuiz()" aria-label="Retake the assessment">
+            <span aria-hidden="true">🔄</span> Retake Quiz
+          </button>
+        </div>
+
+      </section>
+    </article>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <p>
+      &copy; <span id="year"></span> <a href="https://discoverhealthgroup.com/" target="_blank" rel="noopener">Discover Health Group</a>.
+      This tool uses the PHQ-9, a validated clinical instrument. Results are not a diagnosis.
+    </p>
+    <p style="margin-top:6px">
+      Crisis line: <a href="tel:988">988</a> · Emergency: <a href="tel:911">911</a>
+    </p>
+  </footer>
+
+</div><!-- /.quiz-shell -->
+
+<script>
+/* ── Data ────────────────────────────────────────────────────────── */
+const QUESTIONS = [
+  { text: "Little interest or pleasure in doing things",          category: "Interest" },
+  { text: "Feeling down, depressed, or hopeless",                 category: "Mood" },
+  { text: "Trouble falling or staying asleep, or sleeping too much", category: "Sleep" },
+  { text: "Feeling tired or having little energy",                category: "Energy" },
+  { text: "Poor appetite or overeating",                          category: "Appetite" },
+  { text: "Feeling bad about yourself — or that you are a failure or have let yourself or your family down", category: "Self-Worth" },
+  { text: "Trouble concentrating on things, such as reading the newspaper or watching television", category: "Focus" },
+  { text: "Moving or speaking so slowly that other people could have noticed — or the opposite: being so fidgety or restless that you have been moving around a lot more than usual", category: "Activity" },
+  { text: "Thoughts that you would be better off dead, or of hurting yourself in some way", category: "Safety" },
+];
+
+const OPTIONS = [
+  { label: "Not at all",             score: 0 },
+  { label: "Several days",           score: 1 },
+  { label: "More than half the days",score: 2 },
+  { label: "Nearly every day",       score: 3 },
+];
+
+const SEVERITY = [
+  { min: 0,  max: 4,  level: "minimal",   label: "Minimal Depression",
+    badge: "sev-minimal",
+    text: "Your score suggests minimal or no depression. While everyone experiences low moments, your responses indicate your mood and daily functioning are generally in a healthy range. Continue prioritizing self-care, social connection, and activities that bring you joy. If you notice changes, consider checking in again." },
+  { min: 5,  max: 9,  level: "mild",      label: "Mild Depression",
+    badge: "sev-mild",
+    text: "Your score suggests mild depression. You may be experiencing some symptoms that are affecting your daily life. This is a common and treatable condition. Speaking with a mental health professional — even briefly — can provide tools and strategies to help you feel better and prevent symptoms from worsening." },
+  { min: 10, max: 14, level: "moderate",  label: "Moderate Depression",
+    badge: "sev-moderate",
+    text: "Your score indicates moderate depression. Symptoms at this level often meaningfully impact work, relationships, and quality of life. We strongly encourage you to reach out to a mental health professional. Treatment — including therapy, lifestyle changes, or medication — is highly effective at this level." },
+  { min: 15, max: 19, level: "modsevere", label: "Moderately Severe Depression",
+    badge: "sev-modsevere",
+    text: "Your score reflects moderately severe depression. This level of depression significantly impacts daily functioning and wellbeing. Please reach out to a healthcare provider as soon as possible. Effective treatments are available, and professional support can make a meaningful difference in your recovery." },
+  { min: 20, max: 27, level: "severe",    label: "Severe Depression",
+    badge: "sev-severe",
+    text: "Your score indicates severe depression. At this level, symptoms are seriously impacting your life. Please contact a mental health professional or call our team today. If you are having thoughts of harming yourself, please call 988 (Suicide & Crisis Lifeline) or go to your nearest emergency room immediately." },
+];
+
+/* ── State ───────────────────────────────────────────────────────── */
+let currentQ = 0;
+let answers  = new Array(QUESTIONS.length).fill(null);
+
+/* ── Init ────────────────────────────────────────────────────────── */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ── Navigation Helpers ──────────────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateProgress(fraction) {
+  const pct = Math.round(fraction * 100);
+  const fill = document.getElementById('progressFill');
+  const bar  = document.getElementById('progressBar');
+  fill.style.width = pct + '%';
+  bar.setAttribute('aria-valuenow', pct);
+}
+
+/* ── Quiz Flow ───────────────────────────────────────────────────── */
+function startQuiz() {
+  currentQ = 0;
+  answers  = new Array(QUESTIONS.length).fill(null);
+  renderQuestion();
+  showScreen('screen-quiz');
+  updateProgress(0);
+  document.getElementById('question-heading').focus();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('qCounter').textContent  = `Question ${currentQ + 1} of ${QUESTIONS.length}`;
+  document.getElementById('qCategory').textContent = q.category;
+  document.getElementById('question-heading').textContent = q.text;
+
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  OPTIONS.forEach((opt, i) => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className  = 'option-btn' + (answers[currentQ] === i ? ' selected' : '');
+    btn.setAttribute('role', 'radio');
+    btn.setAttribute('aria-checked', answers[currentQ] === i ? 'true' : 'false');
+    btn.innerHTML  = `
+      <span class="opt-radio" aria-hidden="true"></span>
+      <span class="opt-label">${opt.label}</span>
+      <span class="opt-score">${opt.score} pt${opt.score !== 1 ? 's' : ''}</span>`;
+    btn.onclick = () => selectOption(i, btn);
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+
+  document.getElementById('btnPrev').style.display = currentQ > 0 ? '' : 'none';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.textContent = currentQ === QUESTIONS.length - 1 ? 'See Results →' : 'Next →';
+  btnNext.disabled = answers[currentQ] === null;
+
+  updateProgress(currentQ / QUESTIONS.length);
+}
+
+function selectOption(idx, clickedBtn) {
+  answers[currentQ] = idx;
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i === idx);
+    b.setAttribute('aria-checked', i === idx ? 'true' : 'false');
+  });
+  document.getElementById('btnNext').disabled = false;
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === null) return;
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function restartQuiz() {
+  startQuiz();
+}
+
+/* ── Results ─────────────────────────────────────────────────────── */
+function showResults() {
+  const total   = answers.reduce((s, a, i) => s + (a !== null ? OPTIONS[a].score : 0), 0);
+  const sev     = SEVERITY.find(s => total >= s.min && total <= s.max);
+  const circum  = 2 * Math.PI * 56;   // r = 56
+
+  showScreen('screen-results');
+  updateProgress(1);
+
+  // Animated score counter
+  animateNumber(document.getElementById('scoreDisplay'), 0, total, 1000);
+
+  // Ring animation
+  const ring = document.getElementById('scoreRing');
+  const pct  = total / 27;
+  setTimeout(() => {
+    ring.style.strokeDashoffset = circum * (1 - pct);
+  }, 100);
+
+  // Badge
+  const badge = document.getElementById('severityBadge');
+  badge.textContent = sev.label;
+  badge.className   = 'severity-badge ' + sev.badge;
+
+  // Severity scale highlight
+  document.querySelectorAll('.scale-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.level === sev.level);
+  });
+
+  // Interpretation
+  document.getElementById('interpretationText').textContent = sev.text;
+
+  // Breakdown
+  const bList = document.getElementById('breakdownList');
+  bList.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const score = answers[i] !== null ? OPTIONS[answers[i]].score : 0;
+    const div   = document.createElement('div');
+    div.className = 'breakdown-item';
+    div.innerHTML = `
+      <span class="breakdown-label">${i + 1}. ${q.category}</span>
+      <span class="breakdown-score">${score}/3</span>
+      <div class="breakdown-bar"><div class="breakdown-fill" style="width:${(score/3)*100}%"></div></div>`;
+    bList.appendChild(div);
+  });
+
+  // Scroll top
+  document.querySelector('.quiz-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function animateNumber(el, from, to, duration) {
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(from + (to - from) * p);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── PDF Download ────────────────────────────────────────────────── */
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+  const total   = answers.reduce((s, a) => s + (a !== null ? OPTIONS[a].score : 0), 0);
+  const sev     = SEVERITY.find(s => total >= s.min && total <= s.max);
+  const date    = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const primary = [49, 144, 170];
+  const dark    = [38, 50, 56];
+  const accent  = [250, 211, 41];
+  let y = 0;
+
+  // Header bar
+  doc.setFillColor(...dark);
+  doc.rect(0, 0, 612, 80, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(20);
+  doc.text('Depression Self-Assessment Results', 306, 38, { align: 'center' });
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Discover Health Group  |  discoverhealthgroup.com', 306, 58, { align: 'center' });
+  doc.text(`Report generated: ${date}`, 306, 72, { align: 'center' });
+
+  y = 110;
+
+  // Score box
+  doc.setFillColor(...primary);
+  doc.roundedRect(60, y, 492, 90, 8, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(42);
+  doc.text(String(total), 130, y + 60, { align: 'center' });
+  doc.setFontSize(12);
+  doc.text('/ 27', 130, y + 78, { align: 'center' });
+  doc.setFontSize(18);
+  doc.text(sev.label, 360, y + 46, { align: 'center' });
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`PHQ-9 Score`, 360, y + 68, { align: 'center' });
+
+  y += 110;
+
+  // Interpretation
+  doc.setTextColor(...dark);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('What This Means', 60, y); y += 18;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(80, 80, 80);
+  const lines = doc.splitTextToSize(sev.text, 492);
+  doc.text(lines, 60, y); y += lines.length * 14 + 18;
+
+  // Breakdown table
+  doc.setTextColor(...dark);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('Answer Breakdown', 60, y); y += 14;
+
+  doc.setFillColor(245, 246, 247);
+  doc.rect(60, y, 492, 16, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(90, 114, 128);
+  doc.text('#', 68, y + 11);
+  doc.text('Question', 90, y + 11);
+  doc.text('Category', 370, y + 11);
+  doc.text('Score', 520, y + 11);
+  y += 18;
+
+  QUESTIONS.forEach((q, i) => {
+    const score = answers[i] !== null ? OPTIONS[answers[i]].score : 0;
+    const ans   = answers[i] !== null ? OPTIONS[answers[i]].label : 'Unanswered';
+    if (i % 2 === 0) {
+      doc.setFillColor(250, 251, 252);
+      doc.rect(60, y - 4, 492, 18, 'F');
+    }
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 42, 48);
+    doc.text(String(i + 1), 68, y + 8);
+    const qShort = doc.splitTextToSize(q.text, 260);
+    doc.text(qShort[0], 90, y + 8);
+    doc.text(q.category, 370, y + 8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`${score}/3`, 520, y + 8);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(120, 140, 150);
+    doc.text(ans, 90, y + 17);
+    y += 24;
+  });
+
+  y += 16;
+
+  // CTA box
+  doc.setFillColor(...primary);
+  doc.roundedRect(60, y, 492, 90, 8, 8, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.text('Ready to Take the Next Step?', 306, y + 28, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.text('Our compassionate team is here to help. Same-day admissions available.', 306, y + 46, { align: 'center' });
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(...accent);
+  doc.text('📞  603-821-1333', 306, y + 70, { align: 'center' });
+
+  y += 106;
+
+  // Footer
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(150, 150, 150);
+  doc.text('This assessment uses the PHQ-9 (Patient Health Questionnaire-9) and is not a medical diagnosis.', 306, y, { align: 'center' });
+  doc.text('Please consult a qualified healthcare professional to discuss these results.', 306, y + 12, { align: 'center' });
+  doc.text('Crisis support: 988 Suicide & Crisis Lifeline  |  Emergency: 911', 306, y + 24, { align: 'center' });
+
+  doc.save(`DHG-Depression-Assessment-${date.replace(/,?\s+/g,'-')}.pdf`);
+}
+
+function printResults() { window.print(); }
+</script>
+</body>
+</html>
